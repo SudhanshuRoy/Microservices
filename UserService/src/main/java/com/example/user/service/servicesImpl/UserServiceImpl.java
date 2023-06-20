@@ -1,13 +1,18 @@
 package com.example.user.service.servicesImpl;
 
+import com.example.user.service.model.Rating;
 import com.example.user.service.model.User;
 import com.example.user.service.repository.UserRepository;
 import com.example.user.service.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +26,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepo;
+
+	@Autowired
+	RestTemplate restTemplate;
 
 	/**
 	 * Saves a user.
@@ -43,8 +51,24 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUser(String userId) {
 		logger.info("Retrieving user with ID: {}", userId);
-		Optional<User> user = userRepo.findById(userId);
-		return user.orElse(null);
+		User user = null;
+		Optional<User> opt = userRepo.findById(userId);
+
+		if (opt.isPresent()) {
+			user = opt.get();
+
+			Rating[] ratings = restTemplate.getForObject("http://localhost:8083/ratings/user/" + userId,
+					Rating[].class);
+
+			System.err.println(Arrays.toString(ratings));
+
+			for (int i = 0; i < ratings.length; i++) {
+				user.getRatings().add(ratings[i]);
+				System.err.println(ratings[i]);
+			}
+
+		}
+		return user;
 	}
 
 	/**
