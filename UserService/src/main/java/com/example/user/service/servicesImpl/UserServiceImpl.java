@@ -60,11 +60,10 @@ public class UserServiceImpl implements UserService {
 			Rating[] ratings = restTemplate.getForObject("http://localhost:8083/ratings/user/" + userId,
 					Rating[].class);
 
-			System.err.println(Arrays.toString(ratings));
 
 			for (int i = 0; i < ratings.length; i++) {
 				user.getRatings().add(ratings[i]);
-				System.err.println(ratings[i]);
+				
 			}
 
 		}
