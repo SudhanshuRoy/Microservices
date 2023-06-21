@@ -1,5 +1,7 @@
 package com.example.user.service.servicesImpl;
 
+import com.example.user.service.external.services.HotelService;
+import com.example.user.service.model.Hotel;
 import com.example.user.service.model.Rating;
 import com.example.user.service.model.User;
 import com.example.user.service.repository.UserRepository;
@@ -15,6 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Implementation of the UserService interface.
@@ -29,6 +33,9 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	RestTemplate restTemplate;
+
+	@Autowired
+	private HotelService hotelService;
 
 	/**
 	 * Saves a user.
@@ -57,14 +64,30 @@ public class UserServiceImpl implements UserService {
 		if (opt.isPresent()) {
 			user = opt.get();
 
-			Rating[] ratings = restTemplate.getForObject("http://localhost:8083/ratings/user/" + userId,
+			Rating[] ratings = restTemplate.getForObject("http://RATING-SERVICE/ratings/user/" + userId,
 					Rating[].class);
 
+			List<Rating> ratingList = Arrays.stream(ratings).toList();
 
-			for (int i = 0; i < ratings.length; i++) {
-				user.getRatings().add(ratings[i]);
-				
-			}
+			List<Rating> finalResult = ratingList.stream().map(rating -> {
+
+				/*
+				 * ResponseEntity<Hotel> hotelResponse = restTemplate
+				 * .getForEntity("http://HOTEL-SERVICE/hotels/" + rating.getHotelId(),
+				 * Hotel.class); System.err.println(hotelResponse);
+				 * logger.info("hotel response {}", hotelResponse); Hotel hotel =
+				 * hotelResponse.getBody();
+				 */
+
+				Hotel hotel = hotelService.getHotel(rating.getHotelId());
+
+				rating.setHotel(hotel);
+
+				return rating;
+
+			}).collect(Collectors.toList());
+
+			user.setRatings(finalResult);
 
 		}
 		return user;

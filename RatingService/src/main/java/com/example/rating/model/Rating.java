@@ -3,6 +3,7 @@ package com.example.rating.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import lombok.Data;
 
@@ -20,5 +21,8 @@ public class Rating {
 	private Integer rating;
 
 	private String feedback;
+
+	@Transient
+	private Hotel hotel;
 
 }

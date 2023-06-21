@@ -7,7 +7,6 @@ import javax.persistence.Id;
 
 import lombok.Data;
 
-@Entity
 @Data
 public class Rating implements Serializable {
 
@@ -22,11 +21,6 @@ public class Rating implements Serializable {
 
 	private String feedback;
 
-	@Override
-	public String toString() {
-		return "Rating [ratingId=" + ratingId + ", userId=" + userId + ", hotelId=" + hotelId + "]";
-	}
-	
-	
+	private Hotel hotel;
 
 }
