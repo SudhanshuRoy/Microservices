@@ -1,24 +1,23 @@
 package com.example.user.service.servicesImpl;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.example.user.service.external.services.HotelService;
+import com.example.user.service.external.services.RatingService;
 import com.example.user.service.model.Hotel;
 import com.example.user.service.model.Rating;
 import com.example.user.service.model.User;
 import com.example.user.service.repository.UserRepository;
 import com.example.user.service.services.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Implementation of the UserService interface.
@@ -103,4 +102,5 @@ public class UserServiceImpl implements UserService {
 		logger.info("Retrieving all users");
 		return userRepo.findAll();
 	}
+
 }

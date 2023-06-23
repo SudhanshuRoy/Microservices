@@ -1,6 +1,8 @@
 package com.example.user.service.controller;
 
 import com.example.user.service.exception.UserException;
+import com.example.user.service.external.services.RatingService;
+import com.example.user.service.model.Rating;
 import com.example.user.service.model.User;
 import com.example.user.service.services.UserService;
 
@@ -21,6 +23,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private RatingService ratingService;
 
 	/**
 	 * Creates a new user.
@@ -75,6 +80,14 @@ public class UserController {
 
 		logger.info("Retrieved {} users", users.size());
 		return new ResponseEntity<>(users, HttpStatus.OK);
+	}
+
+	@PostMapping("/createRating")
+	public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
+
+		Rating savedRating = ratingService.creatRating(rating);
+
+		return new ResponseEntity<Rating>(savedRating, HttpStatus.CREATED);
 	}
 
 	// Exception handling is done in the GlobalExceptionHandler class
