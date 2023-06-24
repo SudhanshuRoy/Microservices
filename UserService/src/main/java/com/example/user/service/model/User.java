@@ -8,11 +8,13 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Entity
 @Table(name = "users")
 @Data
+@Builder
 public class User {
 	@Id
 	String userId;

@@ -6,9 +6,12 @@ import com.example.user.service.model.Rating;
 import com.example.user.service.model.User;
 import com.example.user.service.services.UserService;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -52,6 +55,7 @@ public class UserController {
 	 * @throws UserException if the user couldn't be found
 	 */
 	@GetMapping("/{userId}")
+	@CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallBack")
 	public ResponseEntity<User> viewUser(@PathVariable("userId") String userId) throws UserException {
 		logger.info("Received request to view user with ID: {}", userId);
 
@@ -64,6 +68,13 @@ public class UserController {
 
 		logger.info("User retrieved successfully: {}", user);
 		return new ResponseEntity<>(user, HttpStatus.OK);
+	}
+
+	public ResponseEntity<User> ratingHotelFallBack(String userId, Exception ex) {
+		logger.info("fall back function called because service is down ", ex.getMessage());
+		User user = User.builder().userId("01").name("Ram !").email("ram@gmail.com")
+				.about("if any service is down then this user will be returned").build();
+		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 
 	/**
