@@ -7,6 +7,7 @@ import com.example.user.service.model.User;
 import com.example.user.service.services.UserService;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,10 +55,15 @@ public class UserController {
 	 * @return the user object
 	 * @throws UserException if the user couldn't be found
 	 */
+	int retryCount = 1;
+
 	@GetMapping("/{userId}")
-	@CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod = "ratingHotelFallBack")
+//	@CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod =, "ratingHotelFallBack")
+	@Retry(name = "ratinghotel", fallbackMethod = "ratingHotelFallBack")
 	public ResponseEntity<User> viewUser(@PathVariable("userId") String userId) throws UserException {
 		logger.info("Received request to view user with ID: {}", userId);
+
+		logger.info("retry count : {}", retryCount++);
 
 		User user = userService.getUser(userId);
 

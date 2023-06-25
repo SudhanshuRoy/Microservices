@@ -1,5 +1,6 @@
 server:
   port: 8081
+  
 spring:
 #  datasource:
 #     url: jdbc:mysql://localhost:3306/microservices
@@ -16,8 +17,24 @@ spring:
     show-sql: true 
   config:
     import: configserver:http://localhost:8085
-    
-management:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-94613274.okta.com/oauth2/default
+      client:
+        registration:
+          my-internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oaa4bserzMPWcg335d7
+            client-secret: i4KJfsuE5XmeG1q6BVGah-bjoc0s6s232txiAHgy
+
+        provider:
+          okta:
+            issuer-uri: https://dev-94613274.okta.com/oauth2/default
+management:         
   health:
     circuitbreakers:
       enabled: true
@@ -28,6 +45,30 @@ management:
   endpoint:
     health:
       show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        registerHealthIndicator: true
+        eventConsumerBufferSize: 10
+        failureRateThreshold: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 6s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+  retry:
+    instances: 
+      ratinghotel:
+        max-attempts: 3
+        wait-duration: 5s
+    
+okta:
+  oauth2:
+    issuer: https://dev-94613274.okta.com/oauth2/default
+    audience: api://default         
+        
 #  instance:
 #    prefer-ip-address: true
 #  client:
