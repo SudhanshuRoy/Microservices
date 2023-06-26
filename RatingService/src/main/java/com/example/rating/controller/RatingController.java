@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class RatingController {
 	@Autowired
 	private RatingService ratingService;
 
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@PostMapping("/create")
 	public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
 		logger.info("Received request to give rating: {}", rating);
@@ -29,6 +31,7 @@ public class RatingController {
 		return new ResponseEntity<>(savedRating, HttpStatus.CREATED);
 	}
 
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')  || hasAuthority('Normal')")
 	@GetMapping("/{ratingId}")
 	public ResponseEntity<Rating> viewRatingByRatingId(@PathVariable("ratingId") String ratingId)
 			throws RatingException {
@@ -38,6 +41,7 @@ public class RatingController {
 		return new ResponseEntity<>(rating, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<Rating>> viewRatingByUserId(@PathVariable("userId") String userId)
 			throws RatingException {
@@ -47,6 +51,7 @@ public class RatingController {
 		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@GetMapping("/hotel/{hotelId}")
 	public ResponseEntity<List<Rating>> viewRatingByHotelId(@PathVariable("hotelId") String hotelId)
 			throws RatingException {
@@ -56,6 +61,7 @@ public class RatingController {
 		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')  || hasAuthority('Normal')")
 	@GetMapping("")
 	public ResponseEntity<List<Rating>> viewAllRating() {
 		logger.info("Received request to view all ratings");

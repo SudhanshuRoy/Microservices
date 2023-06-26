@@ -17,10 +17,4 @@ public class UserServiceApplication {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
 
-    @Bean
-    @LoadBalanced
-    static RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
 }
