@@ -29,7 +29,7 @@ public class HotelController {
 	 * @return the created hotel object
 	 * @throws HotelException if there is an error while creating the hotel
 	 */
-	@PreAuthorize("hasAuthority('Admin')")
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@PostMapping("/create")
 	public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) throws HotelException {
 		logger.info("Received request to create hotel: {}", hotel);
@@ -47,8 +47,8 @@ public class HotelController {
 	 * @return the hotel object
 	 * @throws HotelException if the hotel couldn't be found
 	 */
-     
-	@PreAuthorize("hasAuthority('SCOPE_internal')")
+
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@GetMapping("/{hotelId}")
 	public ResponseEntity<Hotel> getHotel(@PathVariable("hotelId") String hotelId) throws HotelException {
 		logger.info("Received request to get hotel with ID: {}", hotelId);
@@ -70,7 +70,7 @@ public class HotelController {
 	 * @return a list of all hotels
 	 * @throws HotelException if there is an error while retrieving the hotels
 	 */
-	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')  || hasAuthority('Normal')")
+//	 @PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@GetMapping("")
 	public ResponseEntity<List<Hotel>> getAllHotels() throws HotelException {
 		logger.info("Received request to retrieve all hotels");

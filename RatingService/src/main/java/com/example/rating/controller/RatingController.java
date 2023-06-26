@@ -31,7 +31,7 @@ public class RatingController {
 		return new ResponseEntity<>(savedRating, HttpStatus.CREATED);
 	}
 
-	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')  || hasAuthority('Normal')")
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@GetMapping("/{ratingId}")
 	public ResponseEntity<Rating> viewRatingByRatingId(@PathVariable("ratingId") String ratingId)
 			throws RatingException {
@@ -41,7 +41,7 @@ public class RatingController {
 		return new ResponseEntity<>(rating, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin') || hasAuthority('Normal')")
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<Rating>> viewRatingByUserId(@PathVariable("userId") String userId)
 			throws RatingException {
@@ -51,7 +51,7 @@ public class RatingController {
 		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin') || hasAuthority('Normal')")
 	@GetMapping("/hotel/{hotelId}")
 	public ResponseEntity<List<Rating>> viewRatingByHotelId(@PathVariable("hotelId") String hotelId)
 			throws RatingException {
@@ -61,7 +61,7 @@ public class RatingController {
 		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')  || hasAuthority('Normal')")
+//	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin') || hasAuthority('Normal')")
 	@GetMapping("")
 	public ResponseEntity<List<Rating>> viewAllRating() {
 		logger.info("Received request to view all ratings");

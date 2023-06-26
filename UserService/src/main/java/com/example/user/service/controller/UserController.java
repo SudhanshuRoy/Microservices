@@ -39,7 +39,6 @@ public class UserController {
 	 * @return the created user object
 	 * @throws UserException if there is an error while creating the user
 	 */
-	@PreAuthorize("hasAuthority('Admin')")
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody User user) throws UserException {
 		logger.info("Received request to create user: {}", user);
@@ -58,7 +57,6 @@ public class UserController {
 	 * @throws UserException if the user couldn't be found
 	 */
 	int retryCount = 1;
-	@PreAuthorize("hasAuthority('Admin')  || hasAuthority('Normal')")
 	@GetMapping("/{userId}")
 //	@CircuitBreaker(name = "ratingHotelBreaker", fallbackMethod =, "ratingHotelFallBack")
 	@Retry(name = "ratinghotel", fallbackMethod = "ratingHotelFallBack")
@@ -91,7 +89,6 @@ public class UserController {
 	 * @return a list of all users
 	 * @throws UserException if there is an error while retrieving the users
 	 */
-	@PreAuthorize("hasAuthority('Admin')  || hasAuthority('Normal')")
 	@GetMapping("")
 	public ResponseEntity<List<User>> getAllUsers() throws UserException {
 		logger.info("Received request to retrieve all users");
@@ -102,7 +99,6 @@ public class UserController {
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
 
-	@PreAuthorize("hasAuthority('Admin')  || hasAuthority('Normal')")
 	@PostMapping("/createRating")
 	public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
 
