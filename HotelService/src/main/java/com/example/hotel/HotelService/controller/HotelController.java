@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class HotelController {
 	 * @return the created hotel object
 	 * @throws HotelException if there is an error while creating the hotel
 	 */
+	@PreAuthorize("hasAuthority('Admin')")
 	@PostMapping("/create")
 	public ResponseEntity<Hotel> createHotel(@RequestBody Hotel hotel) throws HotelException {
 		logger.info("Received request to create hotel: {}", hotel);
@@ -45,6 +47,8 @@ public class HotelController {
 	 * @return the hotel object
 	 * @throws HotelException if the hotel couldn't be found
 	 */
+     
+	@PreAuthorize("hasAuthority('SCOPE_internal')")
 	@GetMapping("/{hotelId}")
 	public ResponseEntity<Hotel> getHotel(@PathVariable("hotelId") String hotelId) throws HotelException {
 		logger.info("Received request to get hotel with ID: {}", hotelId);
@@ -66,6 +70,7 @@ public class HotelController {
 	 * @return a list of all hotels
 	 * @throws HotelException if there is an error while retrieving the hotels
 	 */
+	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')  || hasAuthority('Normal')")
 	@GetMapping("")
 	public ResponseEntity<List<Hotel>> getAllHotels() throws HotelException {
 		logger.info("Received request to retrieve all hotels");
