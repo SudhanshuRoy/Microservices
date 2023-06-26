@@ -21,6 +21,7 @@ okta:
   oauth2:
     issuer: https://dev-94613274.okta.com/oauth2/default
     audience: api://default  
+    
 #eureka:
 #  instance:
 #    prefer-ip-address: true

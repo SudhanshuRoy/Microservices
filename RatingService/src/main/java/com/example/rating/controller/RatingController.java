@@ -22,6 +22,12 @@ public class RatingController {
 	@Autowired
 	private RatingService ratingService;
 
+	/**
+	 * Creates a new rating.
+	 *
+	 * @param rating The Rating object to be created.
+	 * @return ResponseEntity containing the created Rating object.
+	 */
 	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@PostMapping("/create")
 	public ResponseEntity<Rating> createRating(@RequestBody Rating rating) {
@@ -31,6 +37,13 @@ public class RatingController {
 		return new ResponseEntity<>(savedRating, HttpStatus.CREATED);
 	}
 
+	/**
+	 * Retrieves a rating by its ID.
+	 *
+	 * @param ratingId The ID of the rating to be retrieved.
+	 * @return ResponseEntity containing the retrieved Rating object.
+	 * @throws RatingException If the rating with the given ID is not found.
+	 */
 	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin')")
 	@GetMapping("/{ratingId}")
 	public ResponseEntity<Rating> viewRatingByRatingId(@PathVariable("ratingId") String ratingId)
@@ -41,6 +54,13 @@ public class RatingController {
 		return new ResponseEntity<>(rating, HttpStatus.OK);
 	}
 
+	/**
+	 * Retrieves ratings by user ID.
+	 *
+	 * @param userId The ID of the user whose ratings to be retrieved.
+	 * @return ResponseEntity containing the list of retrieved Rating objects.
+	 * @throws RatingException If no ratings are found for the given user ID.
+	 */
 	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin') || hasAuthority('Normal')")
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<Rating>> viewRatingByUserId(@PathVariable("userId") String userId)
@@ -51,6 +71,13 @@ public class RatingController {
 		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 
+	/**
+	 * Retrieves ratings by hotel ID.
+	 *
+	 * @param hotelId The ID of the hotel whose ratings to be retrieved.
+	 * @return ResponseEntity containing the list of retrieved Rating objects.
+	 * @throws RatingException If no ratings are found for the given hotel ID.
+	 */
 	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin') || hasAuthority('Normal')")
 	@GetMapping("/hotel/{hotelId}")
 	public ResponseEntity<List<Rating>> viewRatingByHotelId(@PathVariable("hotelId") String hotelId)
@@ -61,6 +88,11 @@ public class RatingController {
 		return new ResponseEntity<>(ratings, HttpStatus.OK);
 	}
 
+	/**
+	 * Retrieves all ratings.
+	 *
+	 * @return ResponseEntity containing the list of retrieved Rating objects.
+	 */
 //	@PreAuthorize("hasAuthority('SCOPE_internal') || hasAuthority('Admin') || hasAuthority('Normal')")
 	@GetMapping("")
 	public ResponseEntity<List<Rating>> viewAllRating() {

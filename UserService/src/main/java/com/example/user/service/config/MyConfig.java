@@ -18,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.example.user.service.config.interceptor.RestTemplateInterceptor;
 
-
 @Configuration
 public class MyConfig {
 
@@ -27,6 +26,15 @@ public class MyConfig {
 	@Autowired
 	private OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
 
+	/**
+	 * Configures a RestTemplate bean with load-balancing support and a custom
+	 * interceptor. setting rest client interceptor manually in rest template
+	 * 
+	 * manager bean is available in this class only that's why we use didn't
+	 * autowired and directly called after auto wiring the parameters
+	 * 
+	 * @return The configured RestTemplate.
+	 */
 	@Bean
 	@LoadBalanced
 	public RestTemplate restTemplate() {
@@ -35,7 +43,7 @@ public class MyConfig {
 
 		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
 
-		interceptors.add(
+		interceptors. add(
 				new RestTemplateInterceptor(manager(clientRegistrationRepository, oAuth2AuthorizedClientRepository)));
 
 		restTemplate.setInterceptors(interceptors);
@@ -44,7 +52,17 @@ public class MyConfig {
 
 	}
 
-	// declare the bean of OAuth2AuthorizedClient manager
+	/**
+	 * Creates a bean for OAuth2AuthorizedClientManager.
+	 * 
+	 * using this manager only we will extract the token in interceptors
+	 *
+	 * @param clientRegistrationRepository    The repository for client
+	 *                                        registrations.
+	 * @param auth2AuthorizedClientRepository The repository for authorized OAuth2
+	 *                                        clients.
+	 * @return The configured OAuth2AuthorizedClientManager.
+	 */
 
 	@Bean
 	public OAuth2AuthorizedClientManager manager(ClientRegistrationRepository clientRegistrationRepository,

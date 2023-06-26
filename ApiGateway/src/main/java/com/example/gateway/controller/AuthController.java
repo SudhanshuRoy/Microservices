@@ -22,7 +22,15 @@ import com.example.gateway.model.AuthResponse;
 public class AuthController {
 
 	Logger logger = LoggerFactory.getLogger(AuthController.class);
-     
+
+	/**
+	 * Handles the /login endpoint for retrieving authentication details.
+	 *
+	 * @param client The OAuth2AuthorizedClient for the "okta" client registration.
+	 * @param user   The OidcUser representing the authenticated user.
+	 * @return ResponseEntity containing the authentication response.
+	 */
+
 	@GetMapping("/login")
 	public ResponseEntity<AuthResponse> login(@RegisteredOAuth2AuthorizedClient("okta") OAuth2AuthorizedClient client,
 			@AuthenticationPrincipal OidcUser user) {
@@ -44,6 +52,8 @@ public class AuthController {
 		}).collect(Collectors.toList());
 
 		authResponse.setAuthorities(authorities);
+
+		logger.info("Authentication response generated for user: {}", user.getEmail());
 
 		return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.OK);
 	}
